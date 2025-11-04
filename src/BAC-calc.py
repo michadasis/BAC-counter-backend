@@ -22,3 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+def widmark(alc, weight, ratio, hrs): 
+    bac = (alc / (weight * ratio)) * 100 - (0.015 * hrs)
+    return max(bac, 0)
+

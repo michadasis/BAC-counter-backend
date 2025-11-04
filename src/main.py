@@ -22,17 +22,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from fastapi import FastAPI 
-from fastapi.middleware.cors import CORSMiddlewarefrom fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+#from BAC_calc import widmark
 from pydantic import BaseModel
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class BACInput(BaseModel):
+    weight: float      
+    sex: str
+    alc_g: float
+    hrs: float
 
-@app.get("/bac") 
+@app.get("/")
+def root():
+    return {"message": "Hello from FastAPI!"}
 
+@app.post("/bac")
+async def calculate_bac(data: BACInput):
+    weight = data.weight
+    sex = data.sex
+    total_g = data.alc_g
+    hours = data.hrs
+
+    if sex == "male":
+#        bac = widmark(total_g, weight, 0.68 ,hours) 
+        pass
+    else:
+#        bac = widmark(total_g, weight, 0.55 ,hours)
+        pass 
+    
+#    return {"bac": bac}
+ 
