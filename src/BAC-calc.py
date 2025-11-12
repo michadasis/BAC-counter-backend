@@ -21,8 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
-def widmark(alc, weight, ratio, hrs): 
-    bac = (alc / (weight * ratio)) * 100 - (0.015 * hrs)
-    return max(bac, 0)
-
+def widmark(alc_g, weight_kg, ratio, hrs):
+    """
+    alc_g: grams of alcohol
+    weight_kg: body weight in kg
+    ratio: 0.68 for men, 0.55 for women
+    hrs: hours since drinking
+    Returns BAC as a percentage (0.026%)
+    """
+    bac = (alc_g / (weight_kg * ratio * 1000)) * 100 - (0.015 * hrs)
+    return max(round(bac, 4), 0)

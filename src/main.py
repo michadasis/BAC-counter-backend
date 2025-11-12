@@ -21,18 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from fastapi import FastAPI 
+from fastapi import FastAPI
 from pydantic import BaseModel
-#from BAC_calc import widmark
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 class BACInput(BaseModel):
-    weight: float      
+    weight: float
     sex: str
     alc_g: float
     hrs: float
+
+def widmark(alc_g, weight_kg, ratio, hrs):
+    bac = (alc_g / (weight_kg * ratio * 1000)) * 100  # grams alcohol / grams body water * 100
+    bac -= 0.015 * hrs
+    return max(bac, 0)
 
 @app.get("/")
 def root():
@@ -40,17 +44,14 @@ def root():
 
 @app.post("/bac")
 async def calculate_bac(data: BACInput):
-    weight = data.weight
-    sex = data.sex
-    total_g = data.alc_g
-    hours = data.hrs
+    ratio = 0.68 if data.sex == "male" else 0.55
+    bac = widmark(data.alc_g, data.weight, ratio, data.hrs)
+    return {"bac": round(bac, 4)}
 
-    if sex == "male":
-#        bac = widmark(total_g, weight, 0.68 ,hours) 
-        pass
-    else:
-#        bac = widmark(total_g, weight, 0.55 ,hours)
-        pass 
-    
-#    return {"bac": bac}
- 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
