@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-def widmark(alc_g, weight_kg, ratio, hrs):
+def widmark(alc_g: float, weight_kg: float, ratio: float, hrs: float) -> float:
     """
     alc_g: grams of alcohol
     weight_kg: body weight in kg

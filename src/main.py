@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2025 Apostolos Chalis
+Copyright (c) 2025 Apostolos Chalis, Ioannis Michadasis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ SOFTWARE.
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from BAC_calculator import widmark
 
 app = FastAPI()
 
@@ -33,11 +34,6 @@ class BACInput(BaseModel):
     alc_g: float
     hrs: float
 
-def widmark(alc_g, weight_kg, ratio, hrs):
-    bac = (alc_g / (weight_kg * ratio * 1000)) * 100  # grams alcohol / grams body water * 100
-    bac -= 0.015 * hrs
-    return max(bac, 0)
-
 @app.get("/")
 def root():
     return {"message": "Hello from FastAPI!"}
@@ -46,7 +42,7 @@ def root():
 async def calculate_bac(data: BACInput):
     ratio = 0.68 if data.sex == "male" else 0.55
     bac = widmark(data.alc_g, data.weight, ratio, data.hrs)
-    return {"bac": round(bac, 4)}
+    return {"bac": bac}
 
 app.add_middleware(
     CORSMiddleware,
