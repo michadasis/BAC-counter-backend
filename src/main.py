@@ -24,7 +24,7 @@ SOFTWARE.
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from BAC_calculator import widmark
+from .BAC_calculator import widmark
 
 app = FastAPI()
 
