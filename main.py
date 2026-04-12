@@ -28,6 +28,14 @@ from src.BAC_calculator import widmark
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://alccalc.vercel.app"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class BACInput(BaseModel):
     weight: float
     sex: str
@@ -43,11 +51,3 @@ async def calculate_bac(data: BACInput):
     ratio = 0.68 if data.sex == "male" else 0.55
     bac = widmark(data.alc_g, data.weight, ratio, data.hrs)
     return {"bac": bac}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://alccalc.vercel.app"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
